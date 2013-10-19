@@ -6,6 +6,11 @@ if exists('g:loaded_sessionman') || !has('mksession') || &cp
 endif
 let g:loaded_sessionman = 1
 
+let s:session_path_full = expand(g:session_path)
+if !isdirectory(s:session_path_full)
+  call mkdir(s:session_path_full, 'p')
+endif
+
 function! sessionman#open(name) " {{{1
   if a:name != '' && a:name[0] != '"'
     if has('cscope')
