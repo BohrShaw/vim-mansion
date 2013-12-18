@@ -51,13 +51,11 @@ function! sessionman#delete(name) " {{{1
   if a:name != '' && a:name[0] != '"'
     let save_go = &guioptions
     set guioptions+=c
-    if confirm('Are you sure you want to delete "' . a:name . '" session?', "&yes\n&no", 2) == 1
-      setlocal modifiable
-      d
-      setlocal nomodifiable
-      if delete(expand(g:session_path . '/' . a:name)) != 0
-        redraw | echohl ErrorMsg | echo 'Error deleting "' . a:name . '" session file' | echohl None
-      endif
+    setlocal modifiable
+    d
+    setlocal nomodifiable
+    if delete(expand(g:session_path . '/' . a:name)) != 0
+      redraw | echohl ErrorMsg | echo 'Error deleting "' . a:name . '" session file' | echohl None
     endif
     let &guioptions = save_go
   endif
