@@ -30,11 +30,13 @@ aug sessionman
 aug END
 
 " Add menu items
-an 10.370 &File.-SessionsSep- <Nop>
-an 10.371 &File.S&essions.&Open\.\.\. :SessionList<CR>
-an 10.372 &File.S&essions.Open\ &Last :SessionOpenlast<CR>
-an 10.373 &File.S&essions.&Close :SessionClose<CR>
-an 10.374 &File.S&essions.&Save :SessionSave<CR>
-an 10.375 &File.S&essions.Save\ &As\.\.\. :SessionSaveas<CR>
+if exists('did_install_default_menus')
+  an 10.370 &File.-SessionsSep- <Nop>
+  an 10.371 &File.S&essions.&Open\.\.\. :SessionList<CR>
+  an 10.372 &File.S&essions.Open\ &Last :SessionOpenlast<CR>
+  an 10.373 &File.S&essions.&Close :SessionClose<CR>
+  an 10.374 &File.S&essions.&Save :SessionSave<CR>
+  an 10.375 &File.S&essions.Save\ &As\.\.\. :SessionSaveas<CR>
+endif
 
 " vim:sw=2 sts=2 fdm=marker:
