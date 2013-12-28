@@ -15,18 +15,24 @@ endfunction
 
 " Commands
 command! -bar -nargs=0 SessionList call sessionman#list()
-command! -bar -nargs=1 -complete=custom,SessionComplete SessionOpen call sessionman#open(<f-args>)
-command! -bar -nargs=0 SessionOpenlast if exists('g:LAST_SESSION') | call sessionman#open(g:LAST_SESSION) | endif
+command! -bar -nargs=1 -complete=custom,SessionComplete SessionOpen
+      \ call sessionman#open(<f-args>)
+command! -bar -nargs=0 SessionOpenlast if exists('g:LAST_SESSION')
+      \ | call sessionman#open(g:LAST_SESSION) | endif
 command! -bar -nargs=0 SessionClose call sessionman#close()
-command! -bar -nargs=0 SessionSave call sessionman#save()
-command! -bar -nargs=? SessionSaveas call sessionman#saveas(<f-args>)
-command! -bar -nargs=1 -complete=custom,SessionComplete SessionDelete call sessionman#delete(<f-args>)
-command! -bar -nargs=1 -complete=custom,SessionComplete SessionEdit call sessionman#edit(<f-args>)
+command! -bar -nargs=? SessionSave call sessionman#save(<q-args>)
+command! -bar -nargs=1 -complete=custom,SessionComplete SessionDelete
+      \ call sessionman#delete(<f-args>)
+command! -bar -nargs=1 -complete=custom,SessionComplete SessionEdit
+      \ call sessionman#edit(<f-args>)
 command! -bar -nargs=0 SessionInfo call sessionman#info()
+command! -bang -nargs=? -complete=custom,SessionComplete Restart
+      \ call sessionman#restart(<bang>0, <q-args>)
 
 " Auto commands
 aug sessionman
-  au VimLeavePre * if g:session_save_on_exit && v:this_session != '' | call sessionman#save() | endif
+  au VimLeavePre * if g:session_save_on_exit && v:this_session != ''
+        \ | call sessionman#save() | endif
 aug END
 
 " Add menu items
