@@ -1,160 +1,171 @@
 " sessionman.vim - Vim session manager
 " Author: Bohr Shaw <pubohr@gmail.com>
 
-if !has('mksession') || &cp
-  finish
+if !exists('g:sessiondir')
+  let g:sessiondir = '~/.vim/sessions'
 endif
-let g:loaded_sessionman = 1
-
-let g:spath = expand(g:session_path)
-if !isdirectory(g:spath)
-  call mkdir(g:spath, 'p')
+let s:sessiondir = fnamemodify(expand(g:sessiondir), ':p')
+if !isdirectory(s:sessiondir)
+  call mkdir(s:sessiondir, 'p')
 endif
 
-function! sessionman#open(name) " {{{1
-  if a:name != '' && a:name[0] != '"'
-    try
-      set eventignore=all
-      execute 'silent! 1,' . bufnr('$') . 'bd!'
-      let n = bufnr('%')
-      execute 'silent! so ' . g:spath . '/' . a:name
-      execute 'silent! bd! ' . n
-    finally
-      set eventignore=
-      doautoall BufRead
-      doautoall FileType
-      doautoall BufEnter
-      doautoall BufWinEnter
-      doautoall TabEnter
-      doautoall SessionLoadPost
-    endtry
-    let g:last_session = a:name
-  endif
-endfunction
-
-function! sessionman#close() " {{{1
-  execute 'silent! 1,' . bufnr('$') . 'bd!'
-  if v:this_session != ''
-    let g:last_session = v:this_session
-  endif
-  let v:this_session = ''
-endfunction
-
-function! sessionman#delete(name) " {{{1
-  if a:name != ''
-    setl modifiable | d | setl nomodifiable
-    if delete(expand(g:session_path . '/' . a:name))
-      echoe 'Error deleting session file: ' . a:name
-    endif
-  endif
-endfunction
-
-function! sessionman#edit(name) " {{{1
-  if a:name != '' && a:name[0] != '"'
-    execute 'silent! edit ' . g:session_path . '/' . a:name
-    set ft=vim
-  endif
-endfunction
-
-function! sessionman#editextra(name) " {{{1
-  if a:name != '' && a:name[0] != '"'
-    let n = substitute(a:name, "\\.[^.]*$", '', '')
-    execute 'silent! edit ' . g:session_path . '/' . n . 'x.vim'
-  endif
-endfunction
-
-function! sessionman#list() " {{{1
-  let w_sl = bufwinnr("__SessionList__")
-  if w_sl != -1
-    execute w_sl . 'wincmd w'
+" Open a window to manage sessions
+function! sessionman#list() "{{{1
+  let session_winnr = bufwinnr("__SessionList__")
+  if session_winnr != -1
+    execute session_winnr . 'wincmd w'
     return
   endif
   silent! split __SessionList__
 
-  " Mark the buffer as scratch
-  setl buftype=nofile
-  setl bufhidden=wipe
-  setl noswapfile
-  setl nowrap
-  setl nobuflisted
+  setlocal buftype=nofile nobuflisted bufhidden=wipe
 
   nnoremap <buffer> <silent> q :hide<CR>
-  nnoremap <buffer> <silent> o :call sessionman#open(getline('.'))<CR>
-  nnoremap <buffer> <silent> <CR> :call sessionman#open(getline('.'))<CR>
-  nnoremap <buffer> <silent> <2-LeftMouse> :call sessionman#open(getline('.'))<CR>
-  nnoremap <buffer> <silent> d :call sessionman#delete(getline('.'))<CR>
-  nnoremap <buffer> <silent> e :call sessionman#edit(getline('.'))<CR>
-  nnoremap <buffer> <silent> x :call sessionman#editextra(getline('.'))<CR>
+  nnoremap <buffer> <silent> o :exe sessionman#func('open(getline("."))')<CR>
+  nmap <buffer> <silent> <CR> o
+  nnoremap <buffer> <silent> d :exe sessionman#func('delete_in_list()')<CR>
+  nnoremap <buffer> <silent> e :exe sessionman#func('edit(getline("."))')<CR>
 
   syn match Comment "^\".*"
-  put ='\"-----------------------------------------------------'
-  put ='\" q                        - close session list'
-  put ='\" o, <CR>, <2-LeftMouse>   - open session'
-  put ='\" d                        - delete session'
-  put ='\" e                        - edit session'
-  put ='\" x                        - edit extra session script'
-  put ='\"-----------------------------------------------------'
+  put ='\"------------------------------' | 1delete
+  put ='\" q       - close session list'
+  put ='\" o, <CR> - open session'
+  put ='\" d       - delete session'
+  put ='\" e       - edit session'
+  put ='\"------------------------------'
   put =''
-  let l = line(".")
-
   let sessions = sessionman#names()
   if sessions == ''
     syn match Error "^\" There.*"
     let sessions = '" There are no saved sessions'
   endif
-  silent put =sessions
+  put =sessions | normal '{j'
 
-  0,1d
-  execute l
-  setl nomodifiable
-  setl nospell
+  setlocal nomodifiable
+  setlocal nospell
 endfunction
 
-function! sessionman#save(...) " {{{1
-  if exists('a:1') && a:1 != ''
-    let name = a:1
+function! sessionman#func(str)
+  return eval('getline(".") =~ "^[^\"]" ? sessionman#' . a:str . ' : ""')
+endfunction
+
+function! sessionman#delete_in_list()
+  if !sessionman#delete(getline('.'))
+    setlocal modifiable | delete | setlocal nomodifiable
+  endif
+endfunction
+
+" Get the session names in the global session directory
+function! sessionman#names()
+  return substitute(glob(s:sessiondir.'*'), '[^\n]*[/\\]', '', 'g')
+endfunction "}}}1
+
+" Open a session after the current session is closed
+function! sessionman#open(name) "{{{1
+  call sessionman#close()
+  let n = bufnr('%')
+  execute 'silent! so ' . s:session_path(a:name)
+  execute 'silent! bd! ' . n
+endfunction "}}}1
+
+" Delete all buffers in the current session
+function! sessionman#close() "{{{1
+  set eventignore=all
+  execute 'silent! 1,' . bufnr('$') . 'bd!'
+  set eventignore=
+  let v:this_session = ''
+endfunction "}}}1
+
+" Delete a session file
+function! sessionman#delete(name) "{{{1
+  if delete(s:session_path(a:name))
+    echoerr 'Error deleting session file: ' . a:name
+    return 1
+  endif
+endfunction "}}}1
+
+" Edit a session file
+function! sessionman#edit(name) "{{{1
+  execute 'tabedit ' . s:session_path(a:name)
+endfunctio "}}}1
+
+" Save a session file
+function! sessionman#save(...) "{{{1
+  let file = s:session_path(exists('a:1') ? a:1 : '')
+  execute 'mksession! ' . file
+endfunction "}}}1
+
+" Update the session file continuously, or stop updating it and delete it
+" optionally
+function! sessionman#track(bang, file) abort "{{{1
+  let file = s:session_path(a:file)
+  let file_friendly = fnamemodify(file, ':~:.')
+  if a:bang
+    echo 'Delete the session: ' . file_friendly
+    call delete(file)
+    unlet! g:session_if_track
+  elseif exists('g:session_if_track') && empty(a:file)
+    echo 'Stop tracking the session: '.file_friendly
+    unlet g:session_if_track
   else
-    let name = v:this_session == '' ? input('Save the session as: ')
-          \ : substitute(v:this_session, '.*[/\\]', '', '')
+    echo 'Track the session: '.file_friendly
+    let v:this_session = file
+    call sessionman#save(file)
+    let g:session_if_track = 1
   endif
-  if v:this_session != ''
-    let g:last_session = v:this_session
-  endif
-  execute 'mksession! ' . g:session_path . '/' . name
-  echo 'Saved session "' . name . '"'
+endfunction "}}}1
+
+" Show session management state
+function! sessionman#info() "{{{1
+  echo 'Session(' . s:session_name(v:this_session) . ')'
+        \ 'tracking:' . (exists('g:session_if_track') ? 'On' : 'Off')
+        \ 'auto-save:' . (exists('g:session_no_auto_save') ? 'Off' : 'On')
+        \ 'last-session:' . s:session_name(g:LAST_SESSION)
 endfunction
 
-function! sessionman#info() " {{{1
-  echo 'Last_Session: ' . (exists('g:last_session') ? g:last_session : '?')
-  let this_session = substitute(v:this_session, '\v.*[\/]', '', '')
-  echon ' | Current_Session: ' . (this_session == '' ? '?' : this_session)
-  echon ' | Auto_Save_On_Exit: ' . (g:session_save_on_exit == 1 ? 'On' : 'Off')
-endfunction
+function! s:session_name(path)
+  if empty(a:path)
+    return 'None'
+  else
+    return a:path =~ '\V'.escape(s:sessiondir, '\') ?
+          \ substitute(a:path, '.*[/\\]', '', '') : fnamemodify(a:path, ':~:.')
+  endif
+endfunction "}}}1
 
-" Get session names
-function! sessionman#names() " {{{1
-  let sessions = substitute(glob(g:session_path . '/*'), '\v(^|\n)'
-        \. escape(g:spath, '\') . '[\/]', '\1', 'g')
-  " Exclude extra session files ending in 'x.vim'
-  return substitute(sessions, '\v(^|\n)[^\n]*x\.vim\ze(\n|$)', '', 'g')
-endfunction " }}}1
+" Get the full path of a session file
+function! s:session_path(...) "{{{1
+  let file = exists('a:1') ? a:1 : ''
+  if empty(file)
+    let path = empty(v:this_session) ? s:sessiondir.'Session.vim' : v:this_session
+  elseif file !~# '[/\\]'
+    let path = s:sessiondir . file
+  elseif isdirectory(file)
+    let path = fnamemodify(expand(file), ':p') . 'Session.vim'
+  else
+    let path = fnamemodify(expand(file), ':p')
+  endif
+  return path
+endfunction "}}}1
 
 " Restart Gvim with a session optionally restored
-function! sessionman#restart(bang, ...) " {{{1
+function! sessionman#restart(bang, ...) "{{{1
   if !has('gui_running')
-    echoe 'Not working under the terminal!' | return
+    echoerr 'Not working under the terminal!' | return
   endif
-  let is_session_given = exists('a:1') && a:1 != ''
-  let session_given = is_session_given ? expand(g:session_path . '/' . a:1) : ''
+  let session = exists('a:1') ? a:1 : ''
+  let session_path = s:session_path(session)
   if a:bang
-    let args = is_session_given ? '-S ' . session_given : ''
+    unlet! g:session_no_auto_save
+    let args = empty(session) ? '' : '-S ' . session_path
   else
-    call sessionman#save(v:this_session == '' ? 'tmp' : '')
-    let args = '-S ' . (is_session_given ? session_given : v:this_session)
+    if exists('g:session_no_auto_save')
+      call sessionman#save(session_path)
+    endif
+    let args = '-S ' . session_path
   endif
-  exe has('win32') ? 'silent !start '.$VIMRUNTIME.'/gvim '.args :
-        \ '!gvim '.args.' &'
-  exe 'qa' . (a:bang ? '!' : '')
-endfunction " }}}1
+  execute has('win32') ?
+        \ 'silent !start '.$VIMRUNTIME.'/gvim '.args : '!gvim '.args.' &'
+  execute 'qa' . (a:bang ? '!' : '')
+endfunction "}}}1
 
 " vim:sw=2 sts=2 fdm=marker:
