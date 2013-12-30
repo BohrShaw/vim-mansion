@@ -10,25 +10,25 @@ if !exists('g:LAST_SESSION')
   let g:LAST_SESSION = ''
 endif
 
-function! SessionComplete(A, L, P)
+function! s:complete(A, L, P)
   return mansion#names()
 endfunction
 
 command! -bar -nargs=0 SessionList call mansion#list()
-command! -bar -nargs=1 -complete=custom,SessionComplete SessionOpen
+command! -bar -nargs=1 -complete=custom,s:complete SessionOpen
       \ call mansion#open(<f-args>)
 command! -bar -nargs=0 SessionOpenlast if !empty(g:LAST_SESSION)
       \ | call mansion#open(g:LAST_SESSION) | endif
 command! -bar -nargs=0 SessionClose call mansion#close()
 command! -bar -nargs=? SessionSave call mansion#save(<q-args>)
-command! -bar -nargs=1 -complete=custom,SessionComplete SessionDelete
+command! -bar -nargs=1 -complete=custom,s:complete SessionDelete
       \ call mansion#delete(<f-args>)
-command! -bar -nargs=1 -complete=custom,SessionComplete SessionEdit
+command! -bar -nargs=1 -complete=custom,s:complete SessionEdit
       \ call mansion#edit(<f-args>)
 command! -bar -bang -complete=file -nargs=? SessionTrack
       \ call mansion#track(<bang>0, <q-args>)
 command! -bar -nargs=0 SessionInfo call mansion#info()
-command! -bang -nargs=? -complete=custom,SessionComplete Restart
+command! -bang -nargs=? -complete=custom,s:complete Restart
       \ call mansion#restart(<bang>0, <q-args>)
 
 if !exists('g:session_no_maps')
