@@ -1,4 +1,4 @@
-" sessionman.vim - Vim session manager
+" mansion.vim - Vim session manager
 " Author: Bohr Shaw <pubohr@gmail.com>
 
 if !exists('g:sessiondir')
@@ -10,7 +10,7 @@ if !isdirectory(s:sessiondir)
 endif
 
 " Open a window to manage sessions
-function! sessionman#list() "{{{1
+function! mansion#list() "{{{1
   let session_winnr = bufwinnr("__SessionList__")
   if session_winnr != -1
     execute session_winnr . 'wincmd w'
@@ -21,10 +21,10 @@ function! sessionman#list() "{{{1
   setlocal buftype=nofile nobuflisted bufhidden=wipe
 
   nnoremap <buffer> <silent> q :hide<CR>
-  nnoremap <buffer> <silent> o :exe sessionman#func('open(getline("."))')<CR>
+  nnoremap <buffer> <silent> o :exe mansion#func('open(getline("."))')<CR>
   nmap <buffer> <silent> <CR> o
-  nnoremap <buffer> <silent> d :exe sessionman#func('delete_in_list()')<CR>
-  nnoremap <buffer> <silent> e :exe sessionman#func('edit(getline("."))')<CR>
+  nnoremap <buffer> <silent> d :exe mansion#func('delete_in_list()')<CR>
+  nnoremap <buffer> <silent> e :exe mansion#func('edit(getline("."))')<CR>
 
   syn match Comment "^\".*"
   put ='\"------------------------------' | 1delete
@@ -34,7 +34,7 @@ function! sessionman#list() "{{{1
   put ='\" e       - edit session'
   put ='\"------------------------------'
   put =''
-  let sessions = sessionman#names()
+  let sessions = mansion#names()
   if sessions == ''
     syn match Error "^\" There.*"
     let sessions = '" There are no saved sessions'
@@ -45,31 +45,31 @@ function! sessionman#list() "{{{1
   setlocal nospell
 endfunction
 
-function! sessionman#func(str)
-  return eval('getline(".") =~ "^[^\"]" ? sessionman#' . a:str . ' : ""')
+function! mansion#func(str)
+  return eval('getline(".") =~ "^[^\"]" ? mansion#' . a:str . ' : ""')
 endfunction
 
-function! sessionman#delete_in_list()
-  if !sessionman#delete(getline('.'))
+function! mansion#delete_in_list()
+  if !mansion#delete(getline('.'))
     setlocal modifiable | delete | setlocal nomodifiable
   endif
 endfunction
 
 " Get the session names in the global session directory
-function! sessionman#names()
+function! mansion#names()
   return substitute(glob(s:sessiondir.'*'), '[^\n]*[/\\]', '', 'g')
 endfunction "}}}1
 
 " Open a session after the current session is closed
-function! sessionman#open(name) "{{{1
-  call sessionman#close()
+function! mansion#open(name) "{{{1
+  call mansion#close()
   let n = bufnr('%')
   execute 'silent! so ' . s:session_path(a:name)
   execute 'silent! bd! ' . n
 endfunction "}}}1
 
 " Delete all buffers in the current session
-function! sessionman#close() "{{{1
+function! mansion#close() "{{{1
   set eventignore=all
   execute 'silent! 1,' . bufnr('$') . 'bd!'
   set eventignore=
@@ -77,7 +77,7 @@ function! sessionman#close() "{{{1
 endfunction "}}}1
 
 " Delete a session file
-function! sessionman#delete(name) "{{{1
+function! mansion#delete(name) "{{{1
   if delete(s:session_path(a:name))
     echoerr 'Error deleting session file: ' . a:name
     return 1
@@ -85,19 +85,19 @@ function! sessionman#delete(name) "{{{1
 endfunction "}}}1
 
 " Edit a session file
-function! sessionman#edit(name) "{{{1
+function! mansion#edit(name) "{{{1
   execute 'tabedit ' . s:session_path(a:name)
 endfunctio "}}}1
 
 " Save a session file
-function! sessionman#save(...) "{{{1
+function! mansion#save(...) "{{{1
   let file = s:session_path(exists('a:1') ? a:1 : '')
   execute 'mksession! ' . file
 endfunction "}}}1
 
 " Update the session file continuously, or stop updating it and delete it
 " optionally
-function! sessionman#track(bang, file) abort "{{{1
+function! mansion#track(bang, file) abort "{{{1
   let file = s:session_path(a:file)
   let file_friendly = fnamemodify(file, ':~:.')
   if a:bang
@@ -110,13 +110,13 @@ function! sessionman#track(bang, file) abort "{{{1
   else
     echo 'Track the session: '.file_friendly
     let v:this_session = file
-    call sessionman#save(file)
+    call mansion#save(file)
     let g:session_if_track = 1
   endif
 endfunction "}}}1
 
 " Show session management state
-function! sessionman#info() "{{{1
+function! mansion#info() "{{{1
   echo 'Session(' . s:session_name(v:this_session) . ')'
         \ 'tracking:' . (exists('g:session_if_track') ? 'On' : 'Off')
         \ 'auto-save:' . (exists('g:session_no_auto_save') ? 'Off' : 'On')
@@ -148,7 +148,7 @@ function! s:session_path(...) "{{{1
 endfunction "}}}1
 
 " Restart Gvim with a session optionally restored
-function! sessionman#restart(bang, ...) "{{{1
+function! mansion#restart(bang, ...) "{{{1
   if !has('gui_running')
     echoerr 'Not working under the terminal!' | return
   endif
@@ -159,7 +159,7 @@ function! sessionman#restart(bang, ...) "{{{1
     let args = empty(session) ? '' : '-S ' . session_path
   else
     if exists('g:session_no_auto_save')
-      call sessionman#save(session_path)
+      call mansion#save(session_path)
     endif
     let args = '-S ' . session_path
   endif

@@ -1,35 +1,35 @@
-" sessionman.vim - Vim session manager
+" mansion.vim - Vim session manager
 " Author: Bohr Shaw <pubohr@gmail.com>
 
-if exists("g:loaded_sessionman") || !has('mksession') || &cp
+if exists("g:loaded_mansion") || !has('mksession') || &cp
   finish
 endif
-let g:loaded_sessionman = 1
+let g:loaded_mansion = 1
 
 if !exists('g:LAST_SESSION')
   let g:LAST_SESSION = ''
 endif
 
 function! SessionComplete(A, L, P)
-  return sessionman#names()
+  return mansion#names()
 endfunction
 
-command! -bar -nargs=0 SessionList call sessionman#list()
+command! -bar -nargs=0 SessionList call mansion#list()
 command! -bar -nargs=1 -complete=custom,SessionComplete SessionOpen
-      \ call sessionman#open(<f-args>)
+      \ call mansion#open(<f-args>)
 command! -bar -nargs=0 SessionOpenlast if !empty(g:LAST_SESSION)
-      \ | call sessionman#open(g:LAST_SESSION) | endif
-command! -bar -nargs=0 SessionClose call sessionman#close()
-command! -bar -nargs=? SessionSave call sessionman#save(<q-args>)
+      \ | call mansion#open(g:LAST_SESSION) | endif
+command! -bar -nargs=0 SessionClose call mansion#close()
+command! -bar -nargs=? SessionSave call mansion#save(<q-args>)
 command! -bar -nargs=1 -complete=custom,SessionComplete SessionDelete
-      \ call sessionman#delete(<f-args>)
+      \ call mansion#delete(<f-args>)
 command! -bar -nargs=1 -complete=custom,SessionComplete SessionEdit
-      \ call sessionman#edit(<f-args>)
+      \ call mansion#edit(<f-args>)
 command! -bar -bang -complete=file -nargs=? SessionTrack
-      \ call sessionman#track(<bang>0, <q-args>)
-command! -bar -nargs=0 SessionInfo call sessionman#info()
+      \ call mansion#track(<bang>0, <q-args>)
+command! -bar -nargs=0 SessionInfo call mansion#info()
 command! -bang -nargs=? -complete=custom,SessionComplete Restart
-      \ call sessionman#restart(<bang>0, <q-args>)
+      \ call mansion#restart(<bang>0, <q-args>)
 
 if !exists('g:session_no_maps')
   nnoremap <leader>sl :SessionList<CR>
@@ -53,7 +53,7 @@ endif
 
 function! s:track()
   if exists('g:session_if_track')
-    call sessionman#save()
+    call mansion#save()
   endif
 endfunction
 
@@ -61,12 +61,12 @@ function! s:save()
   if !empty(v:this_session)
     let g:LAST_SESSION = v:this_session
     if !exists('g:session_no_auto_save')
-      call sessionman#save()
+      call mansion#save()
     endif
   endif
 endfunction
 
-augroup sessionman
+augroup mansion
   autocmd!
   autocmd BufEnter * call s:track()
   autocmd VimLeavePre * call s:save()
