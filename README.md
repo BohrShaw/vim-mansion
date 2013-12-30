@@ -1,36 +1,29 @@
-# Vim session manager
-Make session management convenient and delightful.
+# mansion.vim :arrows_clockwise: :relieved:
+**mansion** is a Vim session manager. It's all about managing session files. So the options like 'sessionoptions', 'viewoptions', 'viminfo' are not touched. You may find it simple and convenient.
 
-## Features
-A session management window like this:
+### Usage
+Commands provided are self-explained, such as `SessionOpen`, `SessionClose`, `SessionSave`, etc. See `:com Session` for all additional commands. The argument to a command is a session file specification(Look into `mansion#session_path()` for how an argument is translated to a full session file path.). And an extra `:Restart` command is also provided for restarting gVim.
 
-    q                        - close session list
-    o, <CR>, <2-LeftMouse>   - open session
-    d                        - delete session
-    e                        - edit session
-    x                        - edit extra session script
+Corresponding mappings are also provided. But you can disable them all if you wish(See below). See `:exe 'map <Leader>s'` for default mappings.
 
-Check source for available commands.
+Also, the current session file can be continuously updated as you are working in Vim. See the command `:SessionTrack`. Or less radically, it's written only before Vim exits.
 
-## Configuration
-The central location of sessions:
+### Configuration
+- Set the central path of session files: `let g:sessiondir = '~/.vim/sessions'` (default)
+- Disable auto-saving the current session before exiting Vim: `let g:session_no_auto_save = 1`
+- Disable default mappings: `let g:session_no_maps = 1`
+- Remember the session name when Vim exits: `set viminfo^=!`
 
-    let g:session_path = '~/.vim/sessions' (default)
+### Installation
+- [Pathogen](https://github.com/tpope/vim-pathogen):
+    `cd ~/.vim/bundle && git clone git://github.com/bohrshaw/vim-mansion.git`
+- [Vundle](https://github.com/gmarik/vundle):
+    Add `Bundle 'bohrshaw/vim-mansion'` to '.vimrc' and run `:BundleInstall`.
 
-Weather to auto save the current session before exiting Vim:
+### Inspired by
+- [vim-sessionman](http://www.vim.org/scripts/script.php?script_id=2010)
+- [vim-obsession](https://github.com/tpope/vim-obsession)
 
-    let g:session_save_on_exit = 0 (default)
-
-To save the last session name:
-
-    set viminfo^=!
-
-Mappings I define personally:
-
-    nnoremap <leader>sl :SessionList<CR>
-    nnoremap <leader>ss :SessionSave<CR>
-    nnoremap <leader>sa :SessionSaveas<CR>
-    nnoremap <leader>si :SessionInfo<CR>
-
-## Credit
-Special thanks to the original author Yuri Klubakov who made [sessionman.vim](https://github.com/vim-scripts/sessionman.vim) which this plugin is based on.
+### License
+Copyright (c) Bohr Shaw. Distributed under the same terms as Vim itself.
+See `:help license`.
