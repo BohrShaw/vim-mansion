@@ -31,7 +31,7 @@ command! -bar -nargs=0 SInfo call mansion#info()
 command! -bang -nargs=? -complete=custom,s:complete Restart
       \ call mansion#restart(<bang>0, <q-args>)
 
-if !exists('g:session_no_maps')
+if !get(g:, 'mansion_no_maps')
   nnoremap <leader>sl :SList<CR>
   nnoremap <leader>ss :SSave<CR>
   nnoremap <leader>sa :exe 'SSave ' . input('Save session as: '
@@ -52,7 +52,7 @@ if exists('did_install_default_menus')
 endif
 
 function! s:track()
-  if exists('g:session_if_track')
+  if get(g:, 'mansion_track')
     call mansion#save()
   endif
 endfunction
@@ -60,7 +60,7 @@ endfunction
 function! s:save()
   if !empty(v:this_session)
     let g:LAST_SESSION = v:this_session
-    if !exists('g:session_no_auto_save')
+    if !get(g:, 'mansion_no_auto_save')
       call mansion#save()
     endif
   endif

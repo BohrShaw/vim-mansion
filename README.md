@@ -9,9 +9,9 @@ Corresponding mappings are also provided. But you can disable them all if you wi
 Also, the current session file can be continuously updated as you are working in Vim. See the command `:STrack`. Or less radically, it's written only before Vim exits.
 
 ### Configuration
-- Set the central path of session files: `let g:sessiondir = '~/.vim/sessions'` (default)
-- Disable auto-saving the current session before exiting Vim: `let g:session_no_auto_save = 1`
-- Disable default mappings: `let g:session_no_maps = 1`
+- Set the central path of session files: `let g:sessiondir = '~/.vim/session'` (default)
+- Disable auto-saving the current session before exiting Vim: `let g:mansion_no_auto_save = 1`
+- Disable default mappings: `let g:mansion_no_maps = 1`
 - Remember the session name when Vim exits: `set viminfo^=!`
 
 ### Installation
@@ -20,7 +20,7 @@ Also, the current session file can be continuously updated as you are working in
 - [Vundle](https://github.com/gmarik/vundle):
     Add `Bundle 'bohrshaw/vim-mansion'` to '.vimrc' and run `:BundleInstall`.
 
-### Inspired by
+### Related
 - [vim-sessionman](http://www.vim.org/scripts/script.php?script_id=2010)
 - [vim-obsession](https://github.com/tpope/vim-obsession)
 

@@ -91,7 +91,7 @@ endfunctio "}}}1
 
 " Save a session file
 function! mansion#save(...) "{{{1
-  let file = s:session_path(exists('a:1') ? a:1 : '')
+  let file = s:session_path(get(a:, 1, ''))
   execute 'mksession! ' . file
 endfunction "}}}1
 
@@ -103,23 +103,23 @@ function! mansion#track(bang, file) abort "{{{1
   if a:bang
     echo 'Delete the session: ' . file_friendly
     call delete(file)
-    unlet! g:session_if_track
-  elseif exists('g:session_if_track') && empty(a:file)
+    unlet! g:mansion_track
+  elseif exists('g:mansion_track') && empty(a:file)
     echo 'Stop tracking the session: '.file_friendly
-    unlet g:session_if_track
+    unlet g:mansion_track
   else
     echo 'Track the session: '.file_friendly
     let v:this_session = file
     call mansion#save(file)
-    let g:session_if_track = 1
+    let g:mansion_track = 1
   endif
 endfunction "}}}1
 
 " Show session management state
 function! mansion#info() "{{{1
   echo 'Session(' . s:session_name(v:this_session) . ')'
-        \ 'tracking:' . (exists('g:session_if_track') ? 'On' : 'Off')
-        \ 'auto-save:' . (exists('g:session_no_auto_save') ? 'Off' : 'On')
+        \ 'tracking:' . (get(g:, 'mansion_track') ? 'On' : 'Off')
+        \ 'auto-save:' . (get(g:, 'mansion_no_auto_save') ? 'Off' : 'On')
         \ 'last-session:' . s:session_name(g:LAST_SESSION)
 endfunction
 
@@ -134,7 +134,7 @@ endfunction "}}}1
 
 " Get the full path of a session file
 function! s:session_path(...) "{{{1
-  let file = exists('a:1') ? a:1 : ''
+  let file = get(a:, 1, '')
   if empty(file)
     let path = empty(v:this_session) ? s:sessiondir.'Session.vim' : v:this_session
   elseif file !~# '[/\\]'
@@ -152,13 +152,13 @@ function! mansion#restart(bang, ...) "{{{1
   if !has('gui_running')
     echoerr 'Not working under the terminal!' | return
   endif
-  let session = exists('a:1') ? a:1 : ''
+  let session = get(a:, 1, '')
   let session_path = s:session_path(session)
   if a:bang
-    unlet! g:session_no_auto_save
+    unlet! g:mansion_no_auto_save
     let args = empty(session) ? '' : '-S ' . session_path
   else
-    if exists('g:session_no_auto_save')
+    if get(g:, 'mansion_no_auto_save')
       call mansion#save(session_path)
     endif
     let args = '-S ' . session_path
