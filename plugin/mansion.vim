@@ -53,8 +53,8 @@ augroup mansion
   autocmd!
   autocmd BufEnter * execute get(g:, 'mansion_track') ? mansion#save() : ''
   autocmd VimLeavePre *
-        \ let g:LAST_SESSION = empty(v:this_session) ? '' : v:this_session |
-        \ execute get(g:, 'mansion_no_auto_save') ? '' : mansion#save()
+        \ execute get(g:, 'mansion_no_auto_save') ? '' : mansion#save() |
+        \ let g:LAST_SESSION = empty(v:this_session) ? '' : v:this_session
 augroup END
 
 " vim:sw=2 sts=2 fdm=marker:
