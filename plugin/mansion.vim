@@ -14,39 +14,39 @@ function! s:complete(A, L, P)
   return mansion#names()
 endfunction
 
-command! -bar -nargs=0 SessionList call mansion#list()
-command! -bar -nargs=1 -complete=custom,s:complete SessionOpen
+command! -bar -nargs=0 SList call mansion#list()
+command! -bar -nargs=1 -complete=custom,s:complete SOpen
       \ call mansion#open(<f-args>)
-command! -bar -nargs=0 SessionOpenlast if !empty(g:LAST_SESSION)
+command! -bar -nargs=0 SOpenlast if !empty(g:LAST_SESSION)
       \ | call mansion#open(g:LAST_SESSION) | endif
-command! -bar -nargs=0 SessionClose call mansion#close()
-command! -bar -nargs=? SessionSave call mansion#save(<q-args>)
-command! -bar -nargs=1 -complete=custom,s:complete SessionDelete
+command! -bar -nargs=0 SClose call mansion#close()
+command! -bar -nargs=? SSave call mansion#save(<q-args>)
+command! -bar -nargs=1 -complete=custom,s:complete SDelete
       \ call mansion#delete(<f-args>)
-command! -bar -nargs=1 -complete=custom,s:complete SessionEdit
+command! -bar -nargs=1 -complete=custom,s:complete SEdit
       \ call mansion#edit(<f-args>)
-command! -bar -bang -complete=file -nargs=? SessionTrack
+command! -bar -bang -complete=file -nargs=? STrack
       \ call mansion#track(<bang>0, <q-args>)
-command! -bar -nargs=0 SessionInfo call mansion#info()
+command! -bar -nargs=0 SInfo call mansion#info()
 command! -bang -nargs=? -complete=custom,s:complete Restart
       \ call mansion#restart(<bang>0, <q-args>)
 
 if !exists('g:session_no_maps')
-  nnoremap <leader>sl :SessionList<CR>
-  nnoremap <leader>ss :SessionSave<CR>
-  nnoremap <leader>sa :exe 'SessionSave ' . input('Save session as: '
+  nnoremap <leader>sl :SList<CR>
+  nnoremap <leader>ss :SSave<CR>
+  nnoremap <leader>sa :exe 'SSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
-  nnoremap <leader>st :SessionTrack<CR>
-  nnoremap <leader>si :SessionInfo<CR>
+  nnoremap <leader>st :STrack<CR>
+  nnoremap <leader>si :SInfo<CR>
 endif
 
 if exists('did_install_default_menus')
   anoremenu 10.370 &File.-SessionsSep- <Nop>
-  anoremenu 10.371 &File.S&essions.&Open\.\.\. :SessionList<CR>
-  anoremenu 10.372 &File.S&essions.Open\ &Last :SessionOpenlast<CR>
-  anoremenu 10.373 &File.S&essions.&Close :SessionClose<CR>
-  anoremenu 10.374 &File.S&essions.&Save :SessionSave<CR>
-  anoremenu 10.375 &File.S&essions.Save\ &As\.\.\. :execute 'SessionSave '
+  anoremenu 10.371 &File.S&essions.&Open\.\.\. :SList<CR>
+  anoremenu 10.372 &File.S&essions.Open\ &Last :SOpenlast<CR>
+  anoremenu 10.373 &File.S&essions.&Close :SClose<CR>
+  anoremenu 10.374 &File.S&essions.&Save :SSave<CR>
+  anoremenu 10.375 &File.S&essions.Save\ &As\.\.\. :execute 'SSave '
         \ . inputdialog('Save the session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', ''), 'NONE')<CR>
 endif
