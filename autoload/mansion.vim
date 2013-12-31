@@ -64,14 +64,14 @@ endfunction "}}}1
 function! mansion#open(name) "{{{1
   call mansion#close()
   let n = bufnr('%')
-  execute 'silent! so ' . s:session_path(a:name)
-  execute 'silent! bd! ' . n
+  execute 'silent! source ' . s:session_path(a:name)
+  execute 'silent! bdelete! ' . n
 endfunction "}}}1
 
 " Delete all buffers in the current session
 function! mansion#close() "{{{1
   set eventignore=all
-  execute 'silent! 1,' . bufnr('$') . 'bd!'
+  execute 'silent! 1,' . bufnr('$') . 'bdelete!'
   set eventignore=
   let v:this_session = ''
 endfunction "}}}1
