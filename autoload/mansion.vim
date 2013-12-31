@@ -2,7 +2,7 @@
 " Author: Bohr Shaw <pubohr@gmail.com>
 
 if !exists('g:sessiondir')
-  let g:sessiondir = '~/.vim/sessions'
+  let g:sessiondir = '~/.vim/session'
 endif
 let s:sessiondir = fnamemodify(expand(g:sessiondir), ':p')
 if !isdirectory(s:sessiondir)
