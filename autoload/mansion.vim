@@ -93,6 +93,7 @@ endfunctio "}}}1
 function! mansion#save(...) "{{{1
   let file = s:session_path(get(a:, 1, ''))
   execute 'mksession! ' . file
+  return ''
 endfunction "}}}1
 
 " Update the session file continuously, or stop updating it and delete it

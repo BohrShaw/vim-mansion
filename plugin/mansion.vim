@@ -34,7 +34,7 @@ command! -bang -nargs=? -complete=custom,s:complete Restart
 if !get(g:, 'mansion_no_maps')
   nnoremap <leader>sl :SList<CR>
   nnoremap <leader>ss :SSave<CR>
-  nnoremap <leader>sa :exe 'SSave ' . input('Save session as: '
+  nnoremap <leader>sa :execute 'SSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
   nnoremap <leader>st :STrack<CR>
   nnoremap <leader>si :SInfo<CR>
@@ -51,25 +51,12 @@ if exists('did_install_default_menus')
         \ , substitute(v:this_session, '.*[/\\]', '', ''), 'NONE')<CR>
 endif
 
-function! s:track()
-  if get(g:, 'mansion_track')
-    call mansion#save()
-  endif
-endfunction
-
-function! s:save()
-  if !empty(v:this_session)
-    let g:LAST_SESSION = v:this_session
-    if !get(g:, 'mansion_no_auto_save')
-      call mansion#save()
-    endif
-  endif
-endfunction
-
 augroup mansion
   autocmd!
-  autocmd BufEnter * call s:track()
-  autocmd VimLeavePre * call s:save()
+  autocmd BufEnter * execute get(g:, 'mansion_track') ? mansion#save() : ''
+  autocmd VimLeavePre *
+        \ let g:LAST_SESSION = empty(v:this_session) ? '' : v:this_session |
+        \ execute get(g:, 'mansion_no_auto_save') ? '' : mansion#save()
 augroup END
 
 " vim:sw=2 sts=2 fdm=marker:
