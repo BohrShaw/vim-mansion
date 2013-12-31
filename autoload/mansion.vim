@@ -27,12 +27,12 @@ function! mansion#list() "{{{1
   nnoremap <buffer> <silent> e :exe mansion#func('edit(getline("."))')<CR>
 
   syn match Comment "^\".*"
-  put ='\"------------------------------' | 1delete
+  put ='\"-------------------------------' | 1delete
   put ='\" q       - close session list'
-  put ='\" o, <CR> - open session'
+  put ='\" o, <CR> - open(switch) session'
   put ='\" d       - delete session'
   put ='\" e       - edit session'
-  put ='\"------------------------------'
+  put ='\"-------------------------------'
   put =''
   let sessions = mansion#names()
   if sessions == ''
@@ -60,40 +60,36 @@ function! mansion#names()
   return substitute(glob(s:sessiondir.'*'), '[^\n]*[/\\]', '', 'g')
 endfunction "}}}1
 
-" Open a session after the current session is closed
-function! mansion#open(name) "{{{1
-  call mansion#close()
-  let n = bufnr('%')
+" Merge, close, open(switch), edit, save, delete a session
+function! mansion#merge(name) "{{{1
   execute 'silent! source ' . s:session_path(a:name)
-  execute 'silent! bdelete! ' . n
-endfunction "}}}1
+endfunction
 
-" Delete all buffers in the current session
-function! mansion#close() "{{{1
-  set eventignore=all
+function! mansion#close()
   execute 'silent! 1,' . bufnr('$') . 'bdelete!'
-  set eventignore=
   let v:this_session = ''
-endfunction "}}}1
+endfunction
 
-" Delete a session file
-function! mansion#delete(name) "{{{1
+function! mansion#open(name)
+  call mansion#close()
+  call mansion#merge(a:name)
+endfunction
+
+function! mansion#edit(name)
+  execute 'tabedit ' . s:session_path(a:name)
+endfunctio
+
+function! mansion#save(...)
+  let file = s:session_path(get(a:, 1, ''))
+  execute 'mksession! ' . file
+  return ''
+endfunction
+
+function! mansion#delete(name)
   if delete(s:session_path(a:name))
     echoerr 'Error deleting session file: ' . a:name
     return 1
   endif
-endfunction "}}}1
-
-" Edit a session file
-function! mansion#edit(name) "{{{1
-  execute 'tabedit ' . s:session_path(a:name)
-endfunctio "}}}1
-
-" Save a session file
-function! mansion#save(...) "{{{1
-  let file = s:session_path(get(a:, 1, ''))
-  execute 'mksession! ' . file
-  return ''
 endfunction "}}}1
 
 " Update the session file continuously, or stop updating it and delete it

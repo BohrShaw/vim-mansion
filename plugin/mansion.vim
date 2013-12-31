@@ -15,17 +15,15 @@ function! s:complete(A, L, P)
 endfunction
 
 command! -bar -nargs=0 SList call mansion#list()
-command! -bar -nargs=1 -complete=custom,s:complete SOpen
-      \ call mansion#open(<f-args>)
-command! -bar -nargs=0 SOpenlast if !empty(g:LAST_SESSION)
-      \ | call mansion#open(g:LAST_SESSION) | endif
+command! -bar -nargs=1 -complete=custom,s:complete SMerge call mansion#merge(<f-args>)
+command! -bar -nargs=1 -complete=custom,s:complete SOpen call mansion#open(<f-args>)
+command! -bar -nargs=0 SOpenlast execute empty(g:LAST_SESSION) ?
+      \ 'echo "Last session unknown"' : 'SOpen '.g:LAST_SESSION
 command! -bar -nargs=0 SClose call mansion#close()
 command! -bar -nargs=? SSave call mansion#save(<q-args>)
-command! -bar -nargs=1 -complete=custom,s:complete SDelete
-      \ call mansion#delete(<f-args>)
-command! -bar -nargs=1 -complete=custom,s:complete SEdit
-      \ call mansion#edit(<f-args>)
-command! -bar -bang -complete=file -nargs=? STrack
+command! -bar -nargs=1 -complete=custom,s:complete SDelete call mansion#delete(<f-args>)
+command! -bar -nargs=1 -complete=custom,s:complete SEdit call mansion#edit(<f-args>)
+command! -bar -bang -complete=custom,s:complete -nargs=? STrack
       \ call mansion#track(<bang>0, <q-args>)
 command! -bar -nargs=0 SInfo call mansion#info()
 command! -bang -nargs=? -complete=custom,s:complete Restart
