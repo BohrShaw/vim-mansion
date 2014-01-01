@@ -21,10 +21,10 @@ function! mansion#list() "{{{1
   setlocal buftype=nofile nobuflisted bufhidden=wipe
 
   nnoremap <buffer> <silent> q :hide<CR>
-  nnoremap <buffer> <silent> o :exe mansion#func('open(getline("."))')<CR>
+  nnoremap <buffer> <silent> o :call mansion#func('open(getline("."))')<CR>
   nmap <buffer> <silent> <CR> o
-  nnoremap <buffer> <silent> d :exe mansion#func('delete_in_list()')<CR>
-  nnoremap <buffer> <silent> e :exe mansion#func('edit(getline("."))')<CR>
+  nnoremap <buffer> <silent> d :call mansion#func('delete_in_list()')<CR>
+  nnoremap <buffer> <silent> e :call mansion#func('edit(getline("."))')<CR>
 
   syn match Comment "^\".*"
   put ='\"-------------------------------' | 1delete
@@ -46,7 +46,9 @@ function! mansion#list() "{{{1
 endfunction
 
 function! mansion#func(str)
-  return eval('getline(".") =~ "^[^\"]" ? mansion#' . a:str . ' : ""')
+  if getline('.') =~ '^[^"]'
+    call eval('mansion#' . a:str)
+  endif
 endfunction
 
 function! mansion#delete_in_list()
