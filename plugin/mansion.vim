@@ -32,6 +32,8 @@ command! -bang -nargs=? -complete=custom,s:complete Restart
 if !get(g:, 'mansion_no_maps')
   nnoremap <leader>sl :SList<CR>
   nnoremap <leader>ss :SSave<CR>
+  nnoremap <leader>sS :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
+        \ echo (g:mansion_no_auto_save ? 'no ' : '') . 'auto saving a session'<CR>
   nnoremap <leader>sa :execute 'SSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
   nnoremap <leader>st :STrack<CR>
