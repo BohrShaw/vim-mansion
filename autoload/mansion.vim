@@ -157,6 +157,7 @@ function! mansion#restart(bang, ...) "{{{1
     unlet! g:mansion_no_auto_save
     let args = empty(session) ? '' : '-S ' . session_path
   else
+    wall
     if get(g:, 'mansion_no_auto_save')
       call mansion#save(session_path)
     endif
