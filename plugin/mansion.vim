@@ -33,7 +33,7 @@ if !get(g:, 'mansion_no_maps')
   nnoremap <leader>sl :SList<CR>
   nnoremap <leader>ss :SSave<CR>
   nnoremap <leader>sS :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
-        \ echo (g:mansion_no_auto_save ? 'no ' : '') . 'auto saving a session'<CR>
+        \ echo (g:mansion_no_auto_save ? 'no ' : '') . 'auto saving the session'<CR>
   nnoremap <leader>sa :execute 'SSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
   nnoremap <leader>st :STrack<CR>
@@ -54,9 +54,8 @@ endif
 augroup mansion
   autocmd!
   autocmd BufEnter * execute get(g:, 'mansion_track') ? mansion#save() : ''
-  autocmd VimLeavePre *
-        \ execute get(g:, 'mansion_no_auto_save') ? '' : mansion#save() |
+  autocmd VimLeavePre * execute mansion#if_auto_save() ? mansion#save() : ''|
         \ let g:LAST_SESSION = empty(v:this_session) ? '' : v:this_session
 augroup END
 
-" vim:sw=2 sts=2 fdm=marker:
+" vim:sw=2 sts=2 fdm=marker nowrap:

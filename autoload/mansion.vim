@@ -118,8 +118,13 @@ endfunction "}}}1
 function! mansion#info() "{{{1
   echo 'Session(' . s:session_name(v:this_session) . ')'
         \ 'tracking:' . (get(g:, 'mansion_track') ? 'On' : 'Off')
-        \ 'auto-save:' . (get(g:, 'mansion_no_auto_save') ? 'Off' : 'On')
+        \ 'auto-save:' . (mansion#if_auto_save() ? 'On' : 'Off')
         \ 'last-session:' . s:session_name(g:LAST_SESSION)
+endfunction
+
+function! mansion#if_auto_save()
+  return !get(g:, 'mansion_no_auto_save') &&
+        \ !(bufnr('$') == 1 && bufname('%') == '') ? 1 : 0
 endfunction
 
 function! s:session_name(path)
@@ -153,15 +158,11 @@ function! mansion#restart(bang, ...) "{{{1
   endif
   let session = get(a:, 1, '')
   let session_path = s:session_path(session)
+  unlet! g:mansion_no_auto_save
   if a:bang
-    unlet! g:mansion_no_auto_save
     let args = empty(session) ? '' : '-S ' . session_path
   else
-    wall
-    if get(g:, 'mansion_no_auto_save')
-      call mansion#save(session_path)
-    endif
-    let args = '-S ' . session_path
+    wall | let args = '-S ' . session_path
   endif
   execute has('win32') ?
         \ 'silent !start '.$VIMRUNTIME.'/gvim '.args : '!gvim '.args.' &'
