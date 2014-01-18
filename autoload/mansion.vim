@@ -78,6 +78,7 @@ function! mansion#open(name)
 endfunction
 
 function! mansion#edit(name)
+  hide
   execute 'tabedit ' . s:session_path(a:name)
 endfunctio
 
