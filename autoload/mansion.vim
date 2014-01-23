@@ -159,10 +159,11 @@ function! mansion#restart(bang, ...) "{{{1
   endif
   let session = get(a:, 1, '')
   let session_path = s:session_path(session)
-  unlet! g:mansion_no_auto_save
   if a:bang
+    let g:mansion_no_auto_save = 1
     let args = empty(session) ? '' : '-S ' . session_path
   else
+    unlet! g:mansion_no_auto_save
     wall | let args = '-S ' . session_path
   endif
   execute has('win32') ?
