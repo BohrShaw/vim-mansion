@@ -100,18 +100,21 @@ endfunction "}}}1
 function! mansion#track(bang, file) abort "{{{1
   let file = s:session_path(a:file)
   let file_friendly = fnamemodify(file, ':~:.')
-  if a:bang
-    echo 'Delete the session: ' . file_friendly
-    call delete(file)
+  if a:bang || exists('g:mansion_track') && empty(a:file)
+    autocmd! mansion BufEnter
     unlet! g:mansion_track
-  elseif exists('g:mansion_track') && empty(a:file)
-    echo 'Stop tracking the session: '.file_friendly
-    unlet g:mansion_track
+    if a:bang
+      call delete(file)
+      echo 'Delete the session: ' . file_friendly
+    else
+      echo 'Stop tracking the session: '.file_friendly
+    endif
   else
-    echo 'Track the session: '.file_friendly
     let v:this_session = file
-    call mansion#save(file)
+    autocmd! mansion BufEnter * call mansion#save()
+    doautocmd mansion BufEnter
     let g:mansion_track = 1
+    echo 'Track the session: '.file_friendly
   endif
 endfunction "}}}1
 

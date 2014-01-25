@@ -52,9 +52,7 @@ if exists('did_install_default_menus')
 endif
 
 augroup mansion
-  autocmd!
-  autocmd BufEnter * execute get(g:, 'mansion_track') ? mansion#save() : ''
-  autocmd VimLeavePre * execute mansion#if_auto_save() ? mansion#save() : ''|
+  autocmd! VimLeavePre * execute mansion#if_auto_save() ? mansion#save() : ''|
         \ let g:LAST_SESSION = empty(v:this_session) ? '' : v:this_session
 augroup END
 
