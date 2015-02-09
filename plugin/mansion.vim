@@ -48,7 +48,8 @@ if exists('did_install_default_menus')
 endif
 
 augroup mansion
-  " g:LAST_SESSION shouldn't be stored in a full path format due to
+  " Note: Unlike v:this_session, g:LAST_SESSION remains the same until next
+  " restart. And it shouldn't be stored in a full path format due to
   " incompatibility between '/c/...' and 'C:\...'.
   autocmd! VimLeavePre * execute mansion#if_auto_save() ? mansion#save() : ''|
         \ if !empty(v:this_session) |
