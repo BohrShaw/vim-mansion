@@ -83,8 +83,7 @@ function! mansion#edit(name)
 endfunctio
 
 function! mansion#save(...)
-  let file = s:session_path(get(a:, 1, ''))
-  execute 'mksession! ' . file
+  execute 'mksession! '.s:session_path(get(a:, 1, ''))
   return ''
 endfunction
 
@@ -120,10 +119,10 @@ endfunction "}}}1
 
 " Show session management state
 function! mansion#info() "{{{1
-  echo 'Session(' . s:session_name(v:this_session) . ')'
+  echo 'this_session:' . s:session_name(v:this_session)
+        \ 'LAST_SESSION:' . s:session_name(g:LAST_SESSION)
         \ 'tracking:' . (get(g:, 'mansion_track') ? 'On' : 'Off')
-        \ 'auto-save:' . (mansion#if_auto_save() ? 'On' : 'Off')
-        \ 'last-session:' . s:session_name(g:LAST_SESSION)
+        \ 'auto_save:' . (mansion#if_auto_save() ? 'On' : 'Off')
 endfunction
 
 function! mansion#if_auto_save()
@@ -142,15 +141,17 @@ endfunction "}}}1
 
 " Get the full path of a session file
 function! s:session_path(...) "{{{1
-  let file = get(a:, 1, '')
-  if empty(file)
+  if !a:0 || empty(a:1)
     let path = empty(v:this_session) ? s:sessiondir.'Session.vim' : v:this_session
-  elseif file !~# '[/\\]'
-    let path = s:sessiondir . file
-  elseif isdirectory(file)
-    let path = fnamemodify(expand(file), ':p') . 'Session.vim'
+  elseif filereadable(a:1)
+    let path = fnamemodify(expand(a:1), ':p')
+  elseif isdirectory(a:1)
+    let path = fnamemodify(expand(a:1), ':p') . 'Session.vim'
+  elseif a:1 =~# '\v^[^/\\]+$'
+    let path = s:sessiondir . a:1
   else
-    let path = fnamemodify(expand(file), ':p')
+    throw 'Invalid session path: '.a:1
+    return
   endif
   return path
 endfunction "}}}1
