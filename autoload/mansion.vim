@@ -64,7 +64,7 @@ endfunction "}}}1
 
 " Merge, close, open(switch), edit, save, delete a session
 function! mansion#merge(name) "{{{1
-  execute 'silent! source ' . s:session_path(a:name)
+  execute 'source '.s:session_path(a:name)
 endfunction
 
 function! mansion#close()
