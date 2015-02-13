@@ -68,8 +68,13 @@ function! mansion#merge(name) "{{{1
 endfunction
 
 function! mansion#close()
-  execute 'silent! 1,' . bufnr('$') . 'bdelete!'
-  let v:this_session = ''
+  try
+    %bdelete
+  catch
+    echohl WarningMsg | echo "Changed buffers remain." | echohl NONE
+  finally
+    let v:this_session = ''
+  endtry
 endfunction
 
 function! mansion#open(name)
@@ -79,7 +84,7 @@ endfunction
 
 function! mansion#edit(name)
   execute 'tabedit ' . s:session_path(a:name)
-endfunctio
+endfunction
 
 function! mansion#save(...)
   execute 'mksession! '.s:session_path(get(a:, 1, ''))
