@@ -174,8 +174,10 @@ function! mansion#restart(bang, ...) "{{{1
     unlet! g:mansion_no_auto_save
     wall | let args = '-S ' . session_path
   endif
+  wviminfo " save viminfo before starting a new instance
   execute has('win32') ?
         \ 'silent !start '.$VIMRUNTIME.'/gvim '.args : '!gvim '.args.' &'
+  set viminfo= " no writing anymore upon exit
   execute 'qa' . (a:bang ? '!' : '')
 endfunction "}}}1
 
