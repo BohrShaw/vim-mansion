@@ -28,9 +28,9 @@ if !get(g:, 'mansion_no_maps')
   nnoremap <leader>sl :SessionList<CR>
   nnoremap <leader>so :call mansion#open(g:LAST_SESSION)<CR>
   nnoremap <leader>ss :SessionSave<CR>
-  nnoremap <leader>sS :execute 'SessionSave ' . input('Save session as: '
+  nnoremap <leader>sa :execute 'SessionSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
-  nnoremap <leader>sa :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
+  nnoremap <leader>sS :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
         \ echo (g:mansion_no_auto_save ? 'no ' : '') . 'auto saving the session'<CR>
   nnoremap <leader>st :SessionTrack<CR>
   nnoremap <leader>si :SessionInfo<CR>
