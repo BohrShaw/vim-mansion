@@ -104,7 +104,7 @@ function! mansion#track(bang, file) abort "{{{1
   let file = s:session_path(a:file)
   let file_friendly = fnamemodify(file, ':~:.')
   if a:bang || exists('g:mansion_track') && empty(a:file)
-    autocmd! mansion BufEnter
+    autocmd! mansion BufWinEnter
     unlet! g:mansion_track
     if a:bang
       call delete(file)
@@ -114,8 +114,9 @@ function! mansion#track(bang, file) abort "{{{1
     endif
   else
     let v:this_session = file
-    autocmd! mansion BufEnter * call mansion#save()
-    doautocmd mansion BufEnter
+    autocmd! mansion BufWinEnter * if empty(&buftype) |
+          \call mansion#save() | endif
+    doautocmd mansion BufWinEnter
     let g:mansion_track = 1
     echo 'Track the session: '.file_friendly
   endif
