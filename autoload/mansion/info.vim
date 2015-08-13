@@ -16,7 +16,7 @@ function! s:session_name(path)
   if empty(a:path)
     return 'None'
   else
-    return a:path =~ '\V'.escape(s:sessiondir, '\') ?
+    return a:path =~ '\V'.escape(g:sessiondir, '\') ?
           \ substitute(a:path, '.*[/\\]', '', '') : fnamemodify(a:path, ':~:.')
   endif
 endfunction

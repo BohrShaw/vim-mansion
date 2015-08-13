@@ -19,7 +19,7 @@ command! -bar -nargs=1 -complete=custom,s:complete SessionDelete call mansion#de
 command! -bar -nargs=1 -complete=custom,s:complete SessionEdit call mansion#edit(<f-args>)
 command! -bar -bang -complete=custom,s:complete -nargs=? SessionTrack
       \ call mansion#track(<bang>0, <q-args>)
-command! -bar -nargs=0 SessionInfo call mansion#info()
+command! -bar -nargs=0 SessionInfo call mansion#info#info()
 command! -bang -nargs=? -complete=custom,s:complete Restart
       \ call mansion#restart(<bang>0, <q-args>)
 

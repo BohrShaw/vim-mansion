@@ -4,9 +4,9 @@
 if !exists('g:sessiondir')
   let g:sessiondir = '~/.vim/session'
 endif
-let s:sessiondir = fnamemodify(expand(g:sessiondir), ':p')
-if !isdirectory(s:sessiondir)
-  call mkdir(s:sessiondir, 'p')
+let g:sessiondir = fnamemodify(expand(g:sessiondir), ':p')
+if !isdirectory(g:sessiondir)
+  call mkdir(g:sessiondir, 'p')
 endif
 
 " Open a window to manage sessions
@@ -59,7 +59,7 @@ endfunction
 
 " Get the session names in the global session directory
 function! mansion#names()
-  return substitute(glob(s:sessiondir.'*'), '[^\n]*[/\\]', '', 'g')
+  return substitute(glob(g:sessiondir.'*'), '[^\n]*[/\\]', '', 'g')
 endfunction "}}}1
 
 " Merge, close, open(switch), edit, save, delete a session
@@ -125,13 +125,13 @@ endfunction "}}}1
 " Get the full path of a session file
 function! s:session_path(...) "{{{1
   if !a:0 || empty(a:1)
-    let path = empty(v:this_session) ? s:sessiondir.'Session.vim' : v:this_session
+    let path = empty(v:this_session) ? g:sessiondir.'Session.vim' : v:this_session
   elseif filereadable(a:1)
     let path = fnamemodify(expand(a:1), ':p')
   elseif isdirectory(a:1)
     let path = fnamemodify(expand(a:1), ':p') . 'Session.vim'
   elseif a:1 =~# '\v^[^/\\]+$'
-    let path = s:sessiondir . a:1
+    let path = g:sessiondir . a:1
   else
     throw 'Invalid session path: '.a:1
     return
