@@ -6,6 +6,11 @@ if exists("g:loaded_mansion") || !has('mksession') || &cp
 endif
 let g:loaded_mansion = 1
 
+let g:sessiondir = expand(get(g:, 'sessiondir', '~/.vim/session'))
+if !isdirectory(g:sessiondir)
+  call mkdir(g:sessiondir, 'p')
+endif
+
 function! s:complete(A, L, P)
   return mansion#names()
 endfunction

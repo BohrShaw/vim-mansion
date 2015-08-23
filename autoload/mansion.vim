@@ -1,14 +1,6 @@
 " mansion.vim - Vim session manager
 " Author: Bohr Shaw <pubohr@gmail.com>
 
-if !exists('g:sessiondir')
-  let g:sessiondir = '~/.vim/session'
-endif
-let g:sessiondir = fnamemodify(expand(g:sessiondir), ':p')
-if !isdirectory(g:sessiondir)
-  call mkdir(g:sessiondir, 'p')
-endif
-
 " Open a window to manage sessions
 function! mansion#list() "{{{1
   let session_winnr = bufwinnr("__SessionList__")
