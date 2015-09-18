@@ -7,9 +7,9 @@ endif
 let g:loaded_mansion = 1
 
 " Use fnamemodify() to append a path separator
-let g:sessiondir = fnamemodify(expand(get(g:, 'sessiondir', '~/.vim/session')), ':p')
-if !isdirectory(g:sessiondir)
-  call mkdir(g:sessiondir, 'p')
+let g:mansion_path = fnamemodify(expand(get(g:, 'sessiondir', '~/.vim/session')), ':p')
+if !isdirectory(g:mansion_path)
+  call mkdir(g:mansion_path, 'p')
 endif
 
 function! s:complete(A, L, P)
