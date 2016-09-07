@@ -6,11 +6,12 @@ if exists("g:loaded_mansion") || !has('mksession') || &cp
 endif
 let g:loaded_mansion = 1
 
-" Use fnamemodify() to append a path separator
-let g:mansion_path = fnamemodify(expand(get(g:, 'sessiondir', '~/.vim/session')), ':p')
+let g:mansion_path = expand(get(g:, 'sessiondir', '~/.vim/session'))
 if !isdirectory(g:mansion_path)
   call mkdir(g:mansion_path, 'p')
 endif
+" Append a path separator after the directory exists.
+let g:mansion_path = fnamemodify(g:mansion_path, ':p')
 
 function! s:complete(A, L, P)
   return mansion#names()
