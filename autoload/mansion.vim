@@ -61,10 +61,10 @@ endfunction
 
 function! mansion#close()
   try
-    %bdelete
+    bmodified
+    echohl WarningMsg | echo "Buffers modified." | echohl NONE
   catch
-    echohl WarningMsg | echo "Changed buffers remain." | echohl NONE
-  finally
+    %bdelete!
     let v:this_session = ''
   endtry
 endfunction
