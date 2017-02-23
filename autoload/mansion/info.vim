@@ -1,10 +1,10 @@
 " Show session management state
 
 function! mansion#info#info()
-  echo 'this_session:' . s:session_name(v:this_session)
-        \ 'LAST_SESSION:' . s:session_name(g:LAST_SESSION)
-        \ 'tracking:' . (get(g:, 'mansion_track') ? 'On' : 'Off')
-        \ 'auto_save:' . (mansion#info#if_auto_save() ? 'On' : 'Off')
+  echo s:session_name(v:this_session).'('.
+        \ (get(g:, 'mansion_track') ? '' : 'no-').'tracking, '.
+        \ (mansion#info#if_auto_save() ? '' : 'no-').'auto_saving)'
+        \ '('.s:session_name(g:LAST_SESSION).')'
 endfunction
 
 function! mansion#info#if_auto_save()
