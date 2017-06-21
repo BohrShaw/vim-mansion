@@ -31,16 +31,16 @@ command! -bang -nargs=? -complete=custom,s:complete Restart
       \ call mansion#restart(<bang>0, <q-args>)
 
 if !get(g:, 'mansion_no_maps')
-  nnoremap <leader>s<Space> :Session
-  nnoremap <leader>sl :SessionList<CR>
-  nnoremap <leader>so :call mansion#open(g:LAST_SESSION)<CR>
-  nnoremap <leader>ss :SessionSave<CR>
-  nnoremap <leader>sa :execute 'SessionSave ' . input('Save session as: '
+  nnoremap ys<Space> :Session
+  nnoremap ysl :SessionList<CR>
+  nnoremap yso :call mansion#open(g:LAST_SESSION)<CR>
+  nnoremap yss :SessionSave<CR>
+  nnoremap ysa :execute 'SessionSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
-  nnoremap <leader>sS :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
+  nnoremap ysS :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
         \ echo (g:mansion_no_auto_save ? 'no ' : '') . 'auto saving the session'<CR>
-  nnoremap <leader>st :SessionTrack<CR>
-  nnoremap <leader>si :SessionInfo<CR>
+  nnoremap yst :SessionTrack<CR>
+  nnoremap ysi :SessionInfo<CR>
 endif
 
 if exists('did_install_default_menus')
