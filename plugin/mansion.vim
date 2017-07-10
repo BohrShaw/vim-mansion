@@ -21,7 +21,7 @@ command! -bar -nargs=0 SessionList call mansion#list()
 command! -bar -nargs=1 -complete=custom,s:complete SessionMerge call mansion#merge(<f-args>)
 command! -bar -nargs=1 -complete=custom,s:complete SessionOpen call mansion#open(<f-args>)
 command! -bar -nargs=0 SessionClose call mansion#close()
-command! -bar -nargs=? SessionSave call mansion#save(<q-args>)
+command! -bar -nargs=? SessionSave call mansion#save(<q-args>, 1)
 command! -bar -nargs=1 -complete=custom,s:complete SessionDelete call mansion#delete(<f-args>)
 command! -bar -nargs=1 -complete=custom,s:complete SessionEdit call mansion#edit(<f-args>)
 command! -bar -bang -complete=custom,s:complete -nargs=? SessionTrack
