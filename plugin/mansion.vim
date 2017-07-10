@@ -54,6 +54,11 @@ if exists('did_install_default_menus')
         \ , substitute(v:this_session, '.*[/\\]', '', ''), 'NONE')<CR>
 endif
 
+let s:save_time = get(g:, 'mansion_save_time', -1)
+if s:save_time > 0
+  call timer_start(s:save_time, 'mansion#save', {'repeat': -1})
+endif
+
 augroup mansion
   " Note: Unlike v:this_session, g:LAST_SESSION remains the same until next
   " restart. And it shouldn't be stored in a full path format due to
