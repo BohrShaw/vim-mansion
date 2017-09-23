@@ -24,8 +24,8 @@ command! -bar -nargs=0 SessionClose call mansion#close()
 command! -bar -nargs=? SessionSave call mansion#save(<q-args>, 1)
 command! -bar -nargs=1 -complete=custom,s:complete SessionDelete call mansion#delete(<f-args>)
 command! -bar -nargs=1 -complete=custom,s:complete SessionEdit call mansion#edit(<f-args>)
-command! -bar -bang -complete=custom,s:complete -nargs=? SessionTrack
-      \ call mansion#track(<bang>0, <q-args>)
+command! -bar -bang -complete=custom,s:complete -nargs=? SessionFollow
+      \ call mansion#follow(<bang>0, <q-args>)
 command! -bar -nargs=0 SessionInfo call mansion#info#info()
 command! -bang -nargs=? -complete=custom,s:complete Restart
       \ call mansion#restart(<bang>0, <q-args>)
@@ -37,9 +37,9 @@ if !get(g:, 'mansion_no_maps')
   nnoremap yss :SessionSave<CR>
   nnoremap ysa :execute 'SessionSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
-  nnoremap ysS :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
+  nnoremap yst :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
         \ echo (g:mansion_no_auto_save ? 'no ' : '') . 'auto saving the session'<CR>
-  nnoremap yst :SessionTrack<CR>
+  nnoremap ysf :SessionFollow<CR>
   nnoremap ysi :SessionInfo<CR>
 endif
 

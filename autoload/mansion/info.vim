@@ -2,7 +2,7 @@
 
 function! mansion#info#info()
   echo s:session_name(v:this_session).'('.
-        \ (get(g:, 'mansion_track') ? '' : 'no-').'tracking, '.
+        \ (get(g:, 'mansion_follow') ? '' : 'no-').'follow, '.
         \ (mansion#info#if_auto_save() ? '' : 'no-').'auto_saving)'
         \ '('.s:session_name(g:LAST_SESSION).')'
 endfunction

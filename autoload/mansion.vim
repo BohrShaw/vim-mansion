@@ -96,25 +96,25 @@ endfunction "}}}1
 
 " Update the session file continuously, or stop updating it and delete it
 " optionally
-function! mansion#track(bang, file) abort "{{{1
+function! mansion#follow(bang, file) abort "{{{1
   let file = s:session_path(a:file)
   let file_friendly = fnamemodify(file, ':~:.')
-  if a:bang || exists('g:mansion_track') && empty(a:file)
+  if a:bang || exists('g:mansion_follow') && empty(a:file)
     autocmd! mansion BufWinEnter
-    unlet! g:mansion_track
+    unlet! g:mansion_follow
     if a:bang
       call delete(file)
       echo 'Delete the session: ' . file_friendly
     else
-      echo 'Stop tracking the session: '.file_friendly
+      echo 'Stop following the session: '.file_friendly
     endif
   else
     let v:this_session = file
     autocmd! mansion BufWinEnter * if empty(&buftype) |
           \call mansion#save() | endif
     doautocmd mansion BufWinEnter
-    let g:mansion_track = 1
-    echo 'Track the session: '.file_friendly
+    let g:mansion_follow = 1
+    echo 'Follow the session: '.file_friendly
   endif
 endfunction "}}}1
 
