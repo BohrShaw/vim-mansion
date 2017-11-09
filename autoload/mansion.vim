@@ -87,6 +87,13 @@ function! mansion#save(...)
   return ''
 endfunction
 
+" Only periodically save a session whose name is not 'Session.vim'.
+function! mansion#save_on_timer()
+  if split(v:this_session, '[/\\]')[-1] !=? 'session.vim'
+    call mansion#save()
+  endif
+endfunction
+
 function! mansion#delete(name)
   if delete(s:session_path(a:name))
     echoerr 'Error deleting session file: ' . a:name

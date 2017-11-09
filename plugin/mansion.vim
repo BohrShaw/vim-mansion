@@ -56,7 +56,7 @@ endif
 
 let s:save_time = get(g:, 'mansion_save_time', -1)
 if s:save_time > 0
-  call timer_start(s:save_time, 'mansion#save', {'repeat': -1})
+  let g:mansion_timer = timer_start(s:save_time, 'mansion#save_on_timer', {'repeat': -1})
 endif
 
 augroup mansion

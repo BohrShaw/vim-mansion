@@ -6,7 +6,7 @@ Commands provided are self-explained, such as `SessionOpen`, `SessionClose`, `Se
 
 Corresponding mappings are also provided. But you can disable them all if you wish(See below). See `:exe 'map <Leader>s'` for default mappings.
 
-Also, the current session file can be continuously auto-updated as you are working in Vim. See the command `:SessionFollow`. Or less radically, automatically save the session file only before Vim exits.
+Also, the current session file can be continuously auto-updated as you are working in Vim. See the command `:SessionFollow`. Or less radically, automatically save the session file only before Vim exits. Or it will be auto-saved periodically after a user defined time(`g:mansion_save_time`) only if the session name is not the default session name(`Session.vim`).
 
 ### Configuration
 - Set the central path of session files: `let g:sessiondir = '~/.vim/session'` (default)
