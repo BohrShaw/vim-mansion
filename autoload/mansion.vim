@@ -143,10 +143,10 @@ function! mansion#restart(bang, ...) "{{{1
   let session = get(a:, 1, '')
   let session_path = s:session_path(session)
   if a:bang
-    let g:mansion_no_auto_save = 1
+    let g:mansion_no_save_on_exit = 1
     let args = empty(session) ? '' : '-S ' . session_path
   else
-    unlet! g:mansion_no_auto_save
+    unlet! g:mansion_no_save_on_exit
     wall | let args = '-S ' . session_path
   endif
   wviminfo " save viminfo before starting a new instance

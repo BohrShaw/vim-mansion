@@ -3,12 +3,12 @@
 function! mansion#info#info()
   echo s:session_name(v:this_session).'('.
         \ (get(g:, 'mansion_follow') ? '' : 'no-').'follow, '.
-        \ (mansion#info#if_auto_save() ? '' : 'no-').'auto_saving)'
+        \ (mansion#info#save_on_exit() ? '' : 'no-').'save_on_exit)'
         \ '('.s:session_name(g:LAST_SESSION).')'
 endfunction
 
-function! mansion#info#if_auto_save()
-  return !get(g:, 'mansion_no_auto_save') &&
+function! mansion#info#save_on_exit()
+  return !get(g:, 'mansion_no_save_on_exit') &&
         \ !(bufnr('$') == 1 && bufname('%') == '') ? 1 : 0
 endfunction
 

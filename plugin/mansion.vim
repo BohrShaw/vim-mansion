@@ -37,8 +37,8 @@ if !get(g:, 'mansion_no_maps')
   nnoremap yss :SessionSave<CR>
   nnoremap ysa :execute 'SessionSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
-  nnoremap yst :let g:mansion_no_auto_save = get(g:, 'mansion_no_auto_save') ? 0 : 1 \|
-        \ echo (g:mansion_no_auto_save ? 'no ' : '') . 'auto saving the session'<CR>
+  nnoremap yst :let g:mansion_no_save_on_exit = get(g:, 'mansion_no_save_on_exit') ? 0 : 1 \|
+        \ echo (g:mansion_no_save_on_exit ? 'no ' : '') . 'auto saving the session'<CR>
   nnoremap ysf :SessionFollow<CR>
   nnoremap ysi :SessionInfo<CR>
 endif
@@ -63,7 +63,7 @@ augroup mansion
   " Note: Unlike v:this_session, g:LAST_SESSION remains the same until next
   " restart. And it shouldn't be stored in a full path format due to
   " incompatibility between '/c/...' and 'C:\...'.
-  autocmd! VimLeavePre * execute mansion#info#if_auto_save() ? mansion#save() : ''|
+  autocmd! VimLeavePre * execute mansion#info#save_on_exit() ? mansion#save() : ''|
         \ if !empty(v:this_session) |
         \ let g:LAST_SESSION = substitute(fnamemodify(v:this_session, ':~'), '\\', '/', 'g') |
         \ endif

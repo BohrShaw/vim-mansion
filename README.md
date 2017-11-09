@@ -10,7 +10,7 @@ Also, the current session file can be continuously auto-updated as you are worki
 
 ### Configuration
 - Set the central path of session files: `let g:sessiondir = '~/.vim/session'` (default)
-- Disable auto-saving the current session before exiting Vim: `let g:mansion_no_auto_save = 1`
+- Disable auto-saving the current session before exiting Vim: `let g:mansion_no_save_on_exit = 1`
 - Disable default mappings: `let g:mansion_no_maps = 1`
 - Remember the session name when Vim exits: `set viminfo^=!`
 
