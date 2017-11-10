@@ -88,7 +88,7 @@ function! mansion#save(...)
 endfunction
 
 " Only periodically save a session whose name is not 'Session.vim'.
-function! mansion#save_on_timer()
+function! mansion#save_on_timer(id)
   if split(v:this_session, '[/\\]')[-1] !=? 'session.vim'
     call mansion#save()
   endif
