@@ -89,6 +89,9 @@ endfunction
 
 " Only periodically save a session whose name is not 'Session.vim'.
 function! mansion#save_on_timer(id)
+  if empty(v:this_session)
+    let v:this_session = g:mansion_path.strftime('%Y%m%d')
+  endif
   if split(v:this_session, '[/\\]')[-1] !=? 'session.vim'
     call mansion#save()
   endif
