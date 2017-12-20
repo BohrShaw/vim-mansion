@@ -82,7 +82,7 @@ function! mansion#save(...)
   let file = s:session_path(get(a:, 1, ''))
   execute 'mksession! '.file
   if exists('a:2')
-    echo fnamemodify(file, ':~') 'saved.'
+    echo ' "'.fnamemodify(file, ':~').'" saved.'
   endif
   return ''
 endfunction
