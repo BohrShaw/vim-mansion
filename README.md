@@ -1,12 +1,19 @@
 # mansion.vim :arrows_clockwise: :relieved:
+
 **mansion** is a Vim session manager. It's all about managing session files. So the options like 'sessionoptions', 'viewoptions', 'viminfo' are not touched. You may find it simple and convenient.
 
 ### Usage
+
 Commands provided are self-explained, such as `SessionOpen`, `SessionClose`, `SessionSave`, etc. See `:com Session` for all additional commands. The argument to a command is a session file specification(Look into `mansion#session_path()` for how an argument is translated to a full session file path.). And an extra `:Restart` command is also provided for restarting gVim.
 
 Corresponding mappings are also provided. But you can disable them all if you wish(See below). See `:exe 'map <Leader>s'` for default mappings.
 
-Also, the current session file can be continuously auto-updated as you are working in Vim. See the command `:SessionFollow`. Or less radically, automatically save the session file only before Vim exits. Or it will be auto-saved periodically after a user defined time(`g:mansion_save_time`) only if the session name is not the default session name(`Session.vim`).
+### Session persistence
+
+A session could be saved in the following occasions:
+- Before Vim exits.
+- After a user defined time(`g:mansion_save_time`).
+- Whenever the focused buffer is different(`:SessionFollow`).
 
 ### Configuration
 - Set the central path of session files: `let g:sessiondir = '~/.vim/session'` (default)

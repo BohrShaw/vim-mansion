@@ -87,14 +87,12 @@ function! mansion#save(...)
   return ''
 endfunction
 
-" Only periodically save a session whose name is not 'Session.vim'.
+" Periodically save the current session.
 function! mansion#save_on_timer(id)
-  if empty(v:this_session)
-    let v:this_session = g:mansion_path.strftime('%Y%m%d')
-  endif
-  if split(v:this_session, '[/\\]')[-1] !=? 'session.vim'
-    call mansion#save()
-  endif
+  let s = v:this_session == '' ||
+        \   get(split(v:this_session, '[/\\]'), -1) ==? 'session.vim' ?
+        \ strftime('%Y%m%d_%H%M%S') : ''
+  call mansion#save(s)
 endfunction
 
 function! mansion#delete(name)
