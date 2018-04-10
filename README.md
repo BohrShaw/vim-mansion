@@ -12,7 +12,7 @@ Corresponding mappings are also provided. But you can disable them all if you wi
 
 A session could be saved in the following occasions:
 - Before Vim exits.
-- After a user defined time(`g:mansion_save_time`).
+- After a user defined time(`g:mansion_save_time`), repeatedly.
 - Whenever the focused buffer is different(`:SessionFollow`).
 
 ### Configuration
