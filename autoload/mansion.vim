@@ -132,8 +132,6 @@ function! s:session_path(...) "{{{1
     let path = empty(v:this_session) ? g:mansion_path.'Session.vim' : v:this_session
   elseif filereadable(a:1)
     let path = fnamemodify(expand(a:1), ':p')
-  elseif isdirectory(a:1)
-    let path = fnamemodify(expand(a:1), ':p') . 'Session.vim'
   elseif a:1 =~# '\v^[^/\\]+$'
     let path = g:mansion_path . a:1
   else
