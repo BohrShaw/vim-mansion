@@ -13,10 +13,10 @@ function! mansion#list() "{{{1
   setlocal buftype=nofile nobuflisted bufhidden=wipe
 
   nnoremap <buffer> <silent> q :hide<CR>
-  nnoremap <buffer> <silent> o :call mansion#open(<SID>session_name())<CR>
+  nnoremap <buffer> <silent> o :call <SID>list('mansion#open')<CR>
   nmap <buffer> <silent> <CR> o
-  nnoremap <buffer> <silent> x :call mansion#delete_in_list(<SID>session_name())<CR>
-  nnoremap <buffer> <silent> e :call mansion#edit(<SID>session_name())<CR>
+  nnoremap <buffer> <silent> x :call <SID>list('<SID>delete_in_list')<CR>
+  nnoremap <buffer> <silent> e :call <SID>list('mansion#edit')<CR>
 
   syn match Comment "^\".*"
   put ='\"-------------------------------' | 1delete
@@ -37,13 +37,17 @@ function! mansion#list() "{{{1
   setlocal nospell
 endfunction
 
-function! mansion#func(str)
-  if getline('.') =~ '^[^"]'
-    call eval('mansion#' . a:str)
+" Helper function for operations in the session list buffer
+function! s:list(func, ...)
+  let line = getline('.')
+  if line[0] != '['
+    return
   endif
+  let session = matchstr(line, '\S\+$')
+  call call(a:func, [session])
 endfunction
 
-function! mansion#delete_in_list(s)
+function! s:delete_in_list(s)
   if !mansion#delete(a:s)
     setlocal modifiable | delete | setlocal nomodifiable
   endif
@@ -146,11 +150,6 @@ function! s:session_path(...) "{{{1
   endif
   return path
 endfunction "}}}1
-
-" Get the session name in the current line in the session-list buffer
-function! s:session_name()
-  return matchstr(getline('.'), '\S\+$')
-endfunction
 
 " Restart Gvim with a session optionally restored
 function! mansion#restart(bang, ...) "{{{1
