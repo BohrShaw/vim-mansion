@@ -86,6 +86,7 @@ endfunction
 
 function! mansion#edit(name)
   execute 'tabedit ' . s:session_path(a:name)
+  tabmove -1
 endfunction
 
 function! mansion#save(...)
