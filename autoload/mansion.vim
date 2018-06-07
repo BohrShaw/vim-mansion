@@ -13,10 +13,10 @@ function! mansion#list() "{{{1
   setlocal buftype=nofile nobuflisted bufhidden=wipe
 
   nnoremap <buffer> <silent> q :hide<CR>
-  nnoremap <buffer> <silent> o :call mansion#func('open(getline("."))')<CR>
+  nnoremap <buffer> <silent> o :call mansion#open(<SID>session_name())<CR>
   nmap <buffer> <silent> <CR> o
-  nnoremap <buffer> <silent> d :call mansion#func('delete_in_list()')<CR>
-  nnoremap <buffer> <silent> e :call mansion#func('edit(getline("."))')<CR>
+  nnoremap <buffer> <silent> d :call mansion#delete_in_list(<SID>session_name())<CR>
+  nnoremap <buffer> <silent> e :call mansion#edit(<SID>session_name())<CR>
 
   syn match Comment "^\".*"
   put ='\"-------------------------------' | 1delete
@@ -26,8 +26,8 @@ function! mansion#list() "{{{1
   put ='\" e       - edit session'
   put ='\"-------------------------------'
   put =''
-  let sessions = mansion#names()
-  if sessions == ''
+  let sessions = mansion#names('show_time')
+  if empty(sessions)
     syn match Error "^\" There.*"
     let sessions = '" There are no saved sessions'
   endif
@@ -43,15 +43,21 @@ function! mansion#func(str)
   endif
 endfunction
 
-function! mansion#delete_in_list()
-  if !mansion#delete(getline('.'))
+function! mansion#delete_in_list(s)
+  if !mansion#delete(a:s)
     setlocal modifiable | delete | setlocal nomodifiable
   endif
 endfunction
 
 " Get the session names in the global session directory
-function! mansion#names()
-  return substitute(glob(g:mansion_path.'*'), '[^\n]*[/\\]', '', 'g')
+function! mansion#names(...)
+  let sessions = glob(g:mansion_path.'*', 1, 1)
+  let r = []
+  for s in sessions
+    let time = a:0 ? '['.strftime('%Y-%m-%d %H:%M:%S', getftime(s)).'] ' : ''
+    cal add(r, time.fnamemodify(s, ':t'))
+  endfor
+  return reverse(sort(r))
 endfunction "}}}1
 
 " Merge, close, open(switch), edit, save, delete a session
@@ -140,6 +146,11 @@ function! s:session_path(...) "{{{1
   endif
   return path
 endfunction "}}}1
+
+" Get the session name in the current line in the session-list buffer
+function! s:session_name()
+  return matchstr(getline('.'), '\S\+$')
+endfunction
 
 " Restart Gvim with a session optionally restored
 function! mansion#restart(bang, ...) "{{{1
