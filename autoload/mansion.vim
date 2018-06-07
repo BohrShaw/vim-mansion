@@ -15,14 +15,14 @@ function! mansion#list() "{{{1
   nnoremap <buffer> <silent> q :hide<CR>
   nnoremap <buffer> <silent> o :call mansion#open(<SID>session_name())<CR>
   nmap <buffer> <silent> <CR> o
-  nnoremap <buffer> <silent> d :call mansion#delete_in_list(<SID>session_name())<CR>
+  nnoremap <buffer> <silent> x :call mansion#delete_in_list(<SID>session_name())<CR>
   nnoremap <buffer> <silent> e :call mansion#edit(<SID>session_name())<CR>
 
   syn match Comment "^\".*"
   put ='\"-------------------------------' | 1delete
   put ='\" q       - close session list'
   put ='\" o, <CR> - open(switch) session'
-  put ='\" d       - delete session'
+  put ='\" x       - delete session'
   put ='\" e       - edit session'
   put ='\"-------------------------------'
   put =''
