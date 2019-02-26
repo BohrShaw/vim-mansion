@@ -141,7 +141,7 @@ endfunction "}}}1
 function! s:session_path(...) "{{{1
   if !a:0 || empty(a:1)
     let path = empty(v:this_session) ? g:mansion_path.'Session.vim' : v:this_session
-  elseif filereadable(a:1)
+  elseif filereadable(expand(a:1))
     let path = fnamemodify(expand(a:1), ':p')
   elseif a:1 =~# '\v^[^/\\]+$'
     let path = g:mansion_path . a:1
