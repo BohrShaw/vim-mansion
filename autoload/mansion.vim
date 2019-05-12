@@ -80,6 +80,9 @@ function! mansion#close()
 endfunction
 
 function! mansion#open(name)
+  if a:name == ''
+    return ''
+  endif
   call mansion#close()
   call mansion#merge(a:name)
 endfunction

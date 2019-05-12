@@ -33,7 +33,7 @@ command! -bang -nargs=? -complete=custom,s:complete Restart
 if !get(g:, 'mansion_no_maps')
   nnoremap ys<Space> :Session
   nnoremap ysl :SessionList<CR>
-  nnoremap yso :call mansion#open(g:LAST_SESSION)<CR>
+  nnoremap yso :call mansion#open(get(g:, 'LAST_SESSION', ''))<CR>
   nnoremap yss :SessionSave<CR>
   nnoremap ysa :execute 'SessionSave ' . input('Save session as: '
         \ , substitute(v:this_session, '.*[/\\]', '', 'NONE'))<CR>
